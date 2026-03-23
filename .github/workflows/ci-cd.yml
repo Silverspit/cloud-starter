@@ -1,0 +1,36 @@
+name: CI-CD
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  # maven-test:
+  #   uses: ./.github/workflows/maven-test.yml
+
+  # docker-test:
+  #   needs: maven-test
+  #   uses: ./.github/workflows/docker-test.yml
+
+  push-backend:
+    # needs: docker-test
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/push-ghcr-backend.yml
+
+  push-frontend:
+    # needs: docker-test
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/push-ghcr-frontend.yml
+
+  deploy:
+    needs: [push-backend, push-frontend]
+    runs-on: ubuntu-latest
+    runs: |
+      echo "Deploying to production..."
+      # Add your deployment commands here
+      echo "Deployment complete!"
+

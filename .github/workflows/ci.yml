@@ -1,0 +1,16 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  maven-test:
+    uses: ./.github/workflows/maven-test.yml
+
+  docker-test:
+    needs: maven-test
+    uses: ./.github/workflows/docker-test.yml
